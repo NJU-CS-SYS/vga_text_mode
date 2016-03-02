@@ -1,7 +1,7 @@
 ;8x8 font for ascii character
 ;Generated from https://github.com/dhepper/font8x8/blob/master/font8x8_basic.h
 ;8 bits port width
-memory_initialization_radix=16
+memory_initialization_radix=16;
 memory_initialization_vector=
 00, 00, 00, 00, 00, 00, 00, 00,
 00, 00, 00, 00, 00, 00, 00, 00,
