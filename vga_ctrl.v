@@ -73,7 +73,7 @@ module vga_ctrl(
             // Not in print area, always get the first char.
             // The time is enough for the signal to be prepared.
             // y_pos is prepared before x_pos is prepared, so it is ok.
-            char_addr <= y_pos[31:3] * h_disp;
+            char_addr <= y_pos[31:3] * h_disp[31:3];
             curr_font_bitmap_line <= font_bitmap_line;
         end
         else if (x_pos[2:0] == 3'b000) begin
