@@ -13,7 +13,6 @@ module vga(
     );
 
     vga_ctrl ctrl(
-        .LED    ( LED ),
         .clk    ( CLK100MHZ ),
         .reset  ( RESET ),
         .vga_r  ( VGA_R ),
@@ -22,4 +21,5 @@ module vga(
         .vga_hs ( VGA_HS ),
         .vga_vs ( VGA_VS )
     );
+
 endmodule
