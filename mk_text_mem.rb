@@ -28,6 +28,7 @@ File.open(outfile, 'w') do |f|
     addr_width = Math.log2(bytes.size - 1).floor + 1;
 
     f.puts(";text size is #{bytes.size}")
+    f.puts(";mem size is #{width * height}")
     f.puts(";text address width is #{addr_width}")
     f.puts("memory_initialization_radix = 16;")
     f.write("memory_initialization_vector = ")
