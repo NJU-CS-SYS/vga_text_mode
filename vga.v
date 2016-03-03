@@ -5,6 +5,9 @@
 module vga (
     input CLK100MHZ,
     input RESET,
+    input [7:0] DATA_IN,
+    input WR_EN,
+    input [5:0] DATA_ADDR,
     output [3:0] VGA_R,
     output [3:0] VGA_G,
     output [3:0] VGA_B,
@@ -23,9 +26,12 @@ module vga (
     wire [31:0] addr_read;
 
     vga_model model (
-        .clk ( pixel_clk ),
-        .addr_read ( addr_read ),
-        .char_read ( char_read )
+        .clk          ( pixel_clk ),
+        .addr_read    ( addr_read ),
+        .char_read    ( char_read ),
+        .addr_write   ( DATA_ADDR ),
+        .char_write   ( DATA_IN   ),
+        .write_enable ( WR_EN     )
     );
 
     wire disp;

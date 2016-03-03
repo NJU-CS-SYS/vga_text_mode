@@ -2,19 +2,27 @@
 
 // This module handles text buffer's reading and writing
 
-module vga_model #(parameter addr_width = 31) (
+module vga_model #(parameter addr_width = 32) (
     input clk,
+    input [addr_width - 1 : 0] addr_write,
+    input [7:0] char_write,
+    input write_enable,
     input [addr_width - 1 : 0] addr_read,
     output [7:0] char_read
     );
 
+    // Simple dual port BRAM
+    // ena/enb is set to `always enable'
     text_mem text (
-        .addra ( addr_read ),
-        .dina  ( 0         ),
-        .douta ( char_read ),
-        .clka  ( clk       ),
-        .ena   ( 1         ),
-        .wea   ( 0         )
+        // Write
+        .clka  ( clk          ),
+        .addra ( addr_write   ),
+        .dina  ( char_write   ),
+        .wea   ( write_enable ),
+        // Read
+        .clkb  ( clk          ),
+        .addrb ( addr_read    ),
+        .doutb ( char_read    )
     );
 
 endmodule
