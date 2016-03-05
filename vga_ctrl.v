@@ -2,8 +2,11 @@
 
 // This module interacts with vga_view
 
-module vga_ctrl
-#(parameter h_disp = 1280, v_disp = 1024, x_width = 32, y_width = 32, char_addr_width = 32) (
+module vga_ctrl #(parameter h_disp = 1280,
+                            v_disp = 1024,
+                  localparam x_width = $clog2(h_disp),
+                             y_width = $clog2(v_disp),
+                             char_addr_width = $clog2(h_disp * v_disp / (8 * 8))) (
     // Global inputs
     input clk,
     input reset,

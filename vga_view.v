@@ -1,30 +1,29 @@
 `timescale 1ns / 1ps
 
-module vga_view(
+module vga_view #(parameter h_sync  = 112,
+                            h_back  = 248,
+                            h_disp  = 1280,
+                            h_front = 48,
+                            v_sync  = 3,
+                            v_back  = 38,
+                            v_disp  = 1024,
+                            v_front = 1,
+                  localparam x_width = $clog2(h_disp),
+                             y_width = $clog2(v_disp)) (
     input clk,
     input reset,
     output disp,
-    output [31:0] x_pos,
-    output [31:0] y_pos,
+    output [x_width - 1 : 0] x_pos,
+    output [y_width - 1 : 0] y_pos,
     output vga_hs,
     output vga_vs
     );
 
-    parameter h_sync = 112;
-    parameter h_back = 248;
-    parameter h_disp = 1280;
-    parameter h_front = 48;
+    localparam h_limit = h_sync + h_back + h_disp + h_front;
+    localparam v_limit = v_sync + v_back + v_disp + v_front;
 
-    parameter v_sync = 3;
-    parameter v_back = 38;
-    parameter v_disp = 1024;
-    parameter v_front = 1;
-
-    parameter h_limit = h_sync + h_back + h_disp + h_front;
-    parameter v_limit = v_sync + v_back + v_disp + v_front;
-
-    reg [31:0] x_cnt;
-    reg [31:0] y_cnt;
+    reg [x_width - 1 : 0] x_cnt;
+    reg [y_width - 1 : 0] y_cnt;
 
     always @(posedge clk or negedge reset) begin
         if (!reset) begin
