@@ -3,7 +3,7 @@
 // VGA top module
 
 module vga (
-    input CLK100MHZ,
+    input CLK,
     input RESET,
     input [7:0] DATA_IN,
     input WR_EN,
@@ -31,7 +31,7 @@ module vga (
     wire pixel_clk;
 
     pixel_clock_gen pixel_clock (
-        .clk_in1  ( CLK100MHZ ),
+        .clk_in1  ( CLK       ),
         .clk_out1 ( pixel_clk )
     );
 
