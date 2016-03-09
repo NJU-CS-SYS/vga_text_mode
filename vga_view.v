@@ -21,9 +21,11 @@ module vga_view #(parameter h_sync  = 112,
 
     localparam h_limit = h_sync + h_back + h_disp + h_front;
     localparam v_limit = v_sync + v_back + v_disp + v_front;
+    localparam x_cnt_width = $clog2(h_limit);
+    localparam y_cnt_width = $clog2(v_limit);
 
-    reg [x_width - 1 : 0] x_cnt;
-    reg [y_width - 1 : 0] y_cnt;
+    reg [x_cnt_width - 1 : 0] x_cnt;
+    reg [y_cnt_width - 1 : 0] y_cnt;
 
     always @(posedge clk or negedge reset) begin
         if (!reset) begin
