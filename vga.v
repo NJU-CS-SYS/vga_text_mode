@@ -2,10 +2,10 @@
 
 // VGA top module
 
-module vga (
+module vga #(parameter DATA_ADDR_WIDTH = 6) (
     input CLK,
     input RESET,
-    input [5:0] DATA_ADDR,
+    input [DATA_ADDR_WIDTH - 1 : 0] DATA_ADDR,
     input [7:0] DATA_IN,
     input WR_EN,
     output [3:0] VGA_R,
@@ -37,20 +37,21 @@ module vga (
 
     wire [7:0] char_read;
     wire [addr_width - 1 : 0] addr_read;
+    wire [addr_width - 1 : 0] addr_write = { {(addr_width - DATA_ADDR_WIDTH){1'b0}}, DATA_ADDR };
 
     vga_model #(
-        .h_disp(h_disp),
-        .v_disp(v_disp)
+        .h_disp ( h_disp ),
+        .v_disp ( v_disp )
     ) model (
         // Global input
-        .clk          ( pixel_clk                           ),
-        .reset        ( RESET                               ),
+        .clk          ( pixel_clk  ),
+        .reset        ( RESET      ),
         // Input from controller
-        .addr_read    ( addr_read                           ),
-        .char_read    ( char_read                           ),
+        .addr_read    ( addr_read  ),
+        .char_read    ( char_read  ),
         // Input from user
-        .addr_write   ( {(addr_width - 6){1'b0}}, DATA_ADDR ),
-        .write_enable ( WR_EN                               )
+        .addr_write   ( addr_write ),
+        .write_enable ( WR_EN      )
     );
 
     wire disp;
@@ -58,14 +59,14 @@ module vga (
     wire [y_width - 1 : 0] y_pos;
 
     vga_view #(
-        .h_sync(h_sync),
-        .h_back(h_back),
-        .h_disp(h_disp),
-        .h_front(h_front),
-        .v_sync(v_sync),
-        .v_back(v_back),
-        .v_disp(v_disp),
-        .v_front(v_front)
+        .h_sync  ( h_sync  ),
+        .h_back  ( h_back  ),
+        .h_disp  ( h_disp  ),
+        .h_front ( h_front ),
+        .v_sync  ( v_sync  ),
+        .v_back  ( v_back  ),
+        .v_disp  ( v_disp  ),
+        .v_front ( v_front )
     ) view (
         // Global input
         .clk    ( pixel_clk ),
@@ -80,8 +81,8 @@ module vga (
     );
 
     vga_ctrl #(
-        .h_disp(h_disp),
-        .v_disp(v_disp)
+        .h_disp ( h_disp ),
+        .v_disp ( v_disp )
     ) ctrl (
         // Global input
         .clk    ( pixel_clk    ),
