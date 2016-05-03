@@ -5,11 +5,7 @@
 module vga (
     input CLK,
     input RESET,
-    input BTNC,
-    input BTNU,
-    input BTND,
-    input BTNL,
-    input BTNR,
+    input [5:0] DATA_ADDR,
     input [7:0] DATA_IN,
     input WR_EN,
     output [3:0] VGA_R,
@@ -47,19 +43,14 @@ module vga (
         .v_disp(v_disp)
     ) model (
         // Global input
-        .clk          ( pixel_clk ),
-        .reset        ( RESET     ),
+        .clk          ( pixel_clk                           ),
+        .reset        ( RESET                               ),
         // Input from controller
-        .addr_read    ( addr_read ),
-        .char_read    ( char_read ),
+        .addr_read    ( addr_read                           ),
+        .char_read    ( char_read                           ),
         // Input from user
-        .mov_up       ( BTNU      ),
-        .mov_down     ( BTND      ),
-        .mov_left     ( BTNL      ),
-        .mov_right    ( BTNR      ),
-        .mov_return   ( BTNC      ),
-        .char_write   ( DATA_IN   ),
-        .write_enable ( WR_EN     )
+        .addr_write   ( {(addr_width - 6){1'b0}}, DATA_ADDR ),
+        .write_enable ( WR_EN                               )
     );
 
     wire disp;
