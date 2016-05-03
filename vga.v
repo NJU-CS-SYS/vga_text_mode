@@ -51,7 +51,8 @@ module vga #(parameter DATA_ADDR_WIDTH = 6) (
         .char_read    ( char_read  ),
         // Input from user
         .addr_write   ( addr_write ),
-        .write_enable ( WR_EN      )
+        .write_enable ( WR_EN      ),
+        .char_write   ( DATA_IN    )
     );
 
     wire disp;

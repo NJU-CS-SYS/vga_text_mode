@@ -32,7 +32,8 @@ module vga_ctrl #(parameter h_disp = 1280,
         .dina  ( 0                     ),
         .douta ( font_bitmap_line      ),
         .clka  ( clk                   ),
-        .ena   ( 1                     ),
+        //.ena   ( 1                     ),
+        // there's option: always enable
         .wea   ( 0                     )
     );
 
