@@ -2,12 +2,23 @@
 
 // VGA top module
 
-module vga #(parameter DATA_ADDR_WIDTH = 6) (
+module vga #(
+    parameter DATA_ADDR_WIDTH = 6,
+    parameter h_sync  = 112,
+    parameter h_back  = 248,
+    parameter h_disp  = 1280,
+    parameter h_front = 48,
+    parameter v_sync  = 3,
+    parameter v_back  = 38,
+    parameter v_disp  = 1024,
+    parameter v_front = 1
+) (
     input CLK,
     input RESET,
     input [DATA_ADDR_WIDTH - 1 : 0] DATA_ADDR,
     input [7:0] DATA_IN,
     input WR_EN,
+    input pixel_clk,
     output [3:0] VGA_R,
     output [3:0] VGA_G,
     output [3:0] VGA_B,
@@ -15,25 +26,10 @@ module vga #(parameter DATA_ADDR_WIDTH = 6) (
     output VGA_VS
     );
 
-    parameter h_sync  = 112;
-    parameter h_back  = 248;
-    parameter h_disp  = 1280;
-    parameter h_front = 48;
-    parameter v_sync  = 3;
-    parameter v_back  = 38;
-    parameter v_disp  = 1024;
-    parameter v_front = 1;
-
     localparam addr_width = $clog2(h_disp * v_disp / (8 * 8));
     localparam x_width    = $clog2(h_disp);
     localparam y_width    = $clog2(v_disp);
 
-    wire pixel_clk;
-
-    pixel_clock_gen pixel_clock (
-        .clk_in1  ( CLK       ),
-        .clk_out1 ( pixel_clk )
-    );
 
     wire [7:0] char_read;
     wire [addr_width - 1 : 0] addr_read;
