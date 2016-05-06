@@ -13,7 +13,6 @@ module vga #(
     parameter v_disp  = 1024,
     parameter v_front = 1
 ) (
-    input CLK,
     input RESET,
     input [DATA_ADDR_WIDTH - 1 : 0] DATA_ADDR,
     input [7:0] DATA_IN,
@@ -33,7 +32,7 @@ module vga #(
 
     wire [7:0] char_read;
     wire [addr_width - 1 : 0] addr_read;
-    wire [addr_width - 1 : 0] addr_write = { {(addr_width - DATA_ADDR_WIDTH){1'b0}}, DATA_ADDR };
+    wire [addr_width - 1 : 0] addr_write = DATA_ADDR;
 
     vga_model #(
         .h_disp ( h_disp ),

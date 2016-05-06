@@ -27,13 +27,12 @@ module vga_ctrl #(parameter h_disp = 1280,
     wire [9:0] font_bitmap_line_addr;
     wire [7:0] font_bitmap_line;
 
+    // This block ram is set to always enable
     font_mem font (
         .addra ( font_bitmap_line_addr ),
         .dina  ( 0                     ),
         .douta ( font_bitmap_line      ),
         .clka  ( clk                   ),
-        //.ena   ( 1                     ),
-        // there's option: always enable
         .wea   ( 0                     )
     );
 
