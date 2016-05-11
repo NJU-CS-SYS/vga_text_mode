@@ -8,6 +8,7 @@ module vga_model #(parameter h_disp = 1280,
                               y_limit = v_disp / 8,
                               addr_width = $clog2(x_limit * y_limit)) (
     input clk,
+    input cpu_clk,
     input reset,
     input [addr_width - 1 : 0] addr_write,
     input write_enable,
@@ -20,7 +21,7 @@ module vga_model #(parameter h_disp = 1280,
     // ena/enb is set to `always enable'
     text_mem text (
         // Write
-        .clka  ( clk          ),
+        .clka  ( cpu_clk      ),
         .addra ( addr_write   ),
         .dina  ( char_write   ),
         .wea   ( write_enable ),

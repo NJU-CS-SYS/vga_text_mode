@@ -4,13 +4,13 @@
 
 module vga #(
     parameter DATA_ADDR_WIDTH = 6,
-    parameter h_sync  = 112,
-    parameter h_back  = 248,
-    parameter h_disp  = 1280,
-    parameter h_front = 48,
+    parameter h_sync  = 184,
+    parameter h_back  = 288,
+    parameter h_disp  = 1680,
+    parameter h_front = 104,
     parameter v_sync  = 3,
-    parameter v_back  = 38,
-    parameter v_disp  = 1024,
+    parameter v_back  = 33,
+    parameter v_disp  = 1050,
     parameter v_front = 1
 ) (
     input RESET,
@@ -18,6 +18,7 @@ module vga #(
     input [7:0] DATA_IN,
     input WR_EN,
     input pixel_clk,
+    input cpu_clk,
     output [3:0] VGA_R,
     output [3:0] VGA_G,
     output [3:0] VGA_B,
@@ -40,6 +41,7 @@ module vga #(
     ) model (
         // Global input
         .clk          ( pixel_clk  ),
+        .cpu_clk      ( cpu_clk    ),
         .reset        ( RESET      ),
         // Input from controller
         .addr_read    ( addr_read  ),
