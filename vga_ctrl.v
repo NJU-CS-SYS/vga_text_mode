@@ -19,9 +19,9 @@ module vga_ctrl #(parameter h_disp = 1280,
     // Output to model: character address
     output reg [char_addr_width - 1 : 0] addr_read,
     // Output to pins
-    output [3:0] vga_r,
-    output [3:0] vga_g,
-    output [3:0] vga_b
+    output reg [3:0] vga_r,
+    output reg [3:0] vga_g,
+    output reg [3:0] vga_b
     );
 
     wire [9:0] font_bitmap_line_addr;
@@ -42,9 +42,11 @@ module vga_ctrl #(parameter h_disp = 1280,
 
     wire pixel = curr_font_bitmap_line[ x_pos[2:0] ];
 
-    assign vga_r = (disp && pixel) ? 4'hf : 4'h0;
-    assign vga_g = (disp && pixel) ? 4'hf : 4'h0;
-    assign vga_b = (disp && pixel) ? 4'hf : 4'h0;
+    always @(posedge clk) begin
+        vga_r <= (disp && pixel) ? 4'hf : 4'h0;
+        vga_g <= (disp && pixel) ? 4'hf : 4'h0;
+        vga_b <= (disp && pixel) ? 4'hf : 4'h0;
+    end
 
     // State machine to prepare font bitmap
     always @(posedge clk) begin

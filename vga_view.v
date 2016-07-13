@@ -15,8 +15,8 @@ module vga_view #(parameter h_sync  = 112,
     output disp,
     output [x_width - 1 : 0] x_pos,
     output [y_width - 1 : 0] y_pos,
-    output vga_hs,
-    output vga_vs
+    output reg vga_hs,
+    output reg vga_vs
     );
 
     localparam h_limit = h_sync + h_back + h_disp + h_front;
@@ -53,8 +53,15 @@ module vga_view #(parameter h_sync  = 112,
         end
     end
 
-    assign vga_hs = (x_cnt >= h_sync) ? 1'b1 : 1'b0;
-    assign vga_vs = (y_cnt >= v_sync) ? 1'b1 : 1'b0;
+    // | sync | back porch | disp | front porch | sync ...
+
+    always @(posedge clk) begin
+        vga_hs <= (x_cnt >= h_sync) ? 1'b0 : 1'b1;
+    end
+
+    always @(posedge clk) begin
+        vga_vs <= (y_cnt >= v_sync) ? 1'b0 : 1'b1;
+    end
 
     assign disp = (x_cnt >= (h_sync + h_back))
                     && (x_cnt < (h_sync + h_back + h_disp))
