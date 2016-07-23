@@ -8,6 +8,8 @@ module vga_view #(parameter h_sync  = 112,
                             v_back  = 38,
                             v_disp  = 1024,
                             v_front = 1,
+                            h_pol   = 0,
+                            v_pol   = 0,
                   localparam x_width = $clog2(h_disp),
                              y_width = $clog2(v_disp)) (
     input clk,
@@ -56,11 +58,11 @@ module vga_view #(parameter h_sync  = 112,
     // | sync | back porch | disp | front porch | sync ...
 
     always @(posedge clk) begin
-        vga_hs <= (x_cnt >= h_sync) ? 1'b0 : 1'b1;
+        vga_hs <= (x_cnt >= h_sync) ? (~h_pol) : h_pol;
     end
 
     always @(posedge clk) begin
-        vga_vs <= (y_cnt >= v_sync) ? 1'b0 : 1'b1;
+        vga_vs <= (y_cnt >= v_sync) ? (~v_pol) : v_pol;
     end
 
     assign disp = (x_cnt >= (h_sync + h_back))

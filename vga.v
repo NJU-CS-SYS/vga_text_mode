@@ -4,6 +4,8 @@
 
 module vga #(
     parameter DATA_ADDR_WIDTH = 6,
+    parameter h_pol   = 0,
+    parameter v_pol   = 1,
     parameter h_sync  = 184,
     parameter h_back  = 288,
     parameter h_disp  = 1680,
@@ -57,6 +59,8 @@ module vga #(
     wire [y_width - 1 : 0] y_pos;
 
     vga_view #(
+        .h_pol   ( h_pol   ),
+        .v_pol   ( v_pol   ),
         .h_sync  ( h_sync  ),
         .h_back  ( h_back  ),
         .h_disp  ( h_disp  ),
