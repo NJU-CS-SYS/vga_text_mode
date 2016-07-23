@@ -20,7 +20,7 @@ module vga #(
     input [7:0] DATA_IN,
     input WR_EN,
     input pixel_clk,
-    input cpu_clk,
+    input scroll,
     output [3:0] VGA_R,
     output [3:0] VGA_G,
     output [3:0] VGA_B,
@@ -36,6 +36,7 @@ module vga #(
     wire [7:0] char_read;
     wire [addr_width - 1 : 0] addr_read;
     wire [addr_width - 1 : 0] addr_write = DATA_ADDR;
+    wire [addr_width - 1 : 0] addr_init;
 
     vga_model #(
         .h_disp ( h_disp ),
@@ -43,14 +44,13 @@ module vga #(
     ) model (
         // Global input
         .clk          ( pixel_clk  ),
-        .cpu_clk      ( cpu_clk    ),
-        .reset        ( RESET      ),
+        .addr_init    ( addr_init  ),
         // Input from controller
         .addr_read    ( addr_read  ),
         .char_read    ( char_read  ),
         // Input from user
         .addr_write   ( addr_write ),
-        .write_enable ( WR_EN      ),
+        .write_enable ( WR_EN & ~scroll ),  // Not accept write request when scrolling.
         .char_write   ( DATA_IN    )
     );
 
@@ -88,7 +88,7 @@ module vga #(
     ) ctrl (
         // Global input
         .clk    ( pixel_clk    ),
-        .reset  ( RESET        ),
+        .scroll ( scroll       ),
         // Input from model
         .char_read ( char_read ),
         // Input from viewer
@@ -97,6 +97,7 @@ module vga #(
         .y_pos  ( y_pos        ),
         // Output to model
         .addr_read ( addr_read ),
+        .addr_init ( addr_init ),
         // Output to pins
         .vga_r  ( VGA_R        ),
         .vga_g  ( VGA_G        ),

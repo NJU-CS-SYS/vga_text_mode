@@ -6,10 +6,13 @@ module vga_ctrl #(parameter h_disp = 1280,
                             v_disp = 1024,
                   localparam x_width = $clog2(h_disp),
                              y_width = $clog2(v_disp),
-                             char_addr_width = $clog2(h_disp * v_disp / (8 * 8))) (
+                             h_chars = h_disp / 8,
+                             v_chars = v_disp / 8,
+                             max_chars = h_chars * v_chars,
+                             char_addr_width = $clog2(max_chars)) (
     // Global inputs
     input clk,
-    input reset,
+    input scroll,
     // Input from model: text data
     input [7:0] char_read,
     // Input from viewer: display status
@@ -18,6 +21,7 @@ module vga_ctrl #(parameter h_disp = 1280,
     input [y_width - 1 : 0] y_pos,  // current pixel position.y, valid only if disp effective
     // Output to model: character address
     output reg [char_addr_width - 1 : 0] addr_read,
+    output reg [char_addr_width - 1 : 0] addr_init,  // indicate the first line in screen
     // Output to pins
     output reg [3:0] vga_r,
     output reg [3:0] vga_g,
@@ -48,13 +52,34 @@ module vga_ctrl #(parameter h_disp = 1280,
         vga_b <= (disp && pixel) ? 4'hf : 4'h0;
     end
 
+    // Update top position.
+    always @(posedge clk) begin
+        if (scroll) begin
+            if (addr_init >= max_chars - h_chars) begin
+                addr_init <= 0;
+            end
+            else begin
+                addr_init <= addr_init + h_chars;
+            end
+        end
+    end
+
+    wire [char_addr_width - 1 : 0] line_start;
+
+    Rounder #( char_addr_width ) rnd (
+        .in    ( y_pos[y_width - 1 : 3] * h_chars ),
+        .start ( addr_init                        ),
+        .limit ( max_chars                        ),
+        .out   ( line_start                       )
+    );
+
     // State machine to prepare font bitmap
     always @(posedge clk) begin
         if (!disp) begin
             // Not in print area, always get the first char.
             // The time is enough for the signal to be prepared.
             // y_pos is prepared before x_pos is prepared, so it is ok.
-            addr_read <= y_pos[y_width - 1 : 3] * (h_disp / 8);
+            addr_read <= line_start;
             curr_font_bitmap_line <= font_bitmap_line;
         end
         else if (x_pos[2:0] == 3'b000) begin
